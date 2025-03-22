@@ -39,18 +39,18 @@ model Class {
 }
 
 
-/* RELACION EXPLICITA
-model ClassInCourse {
-  courseId Int
-  course   Course @relation(fields: [courseId], references: [id])
-  classId  Int
-  class    Class  @relation(fields: [classId], references: [id])
+//  RELACION EXPLICITA
+// model ClassInCourse {
+//   courseId Int
+//   course   Course @relation(fields: [courseId], references: [id])
+//   classId  Int
+//   class    Class  @relation(fields: [classId], references: [id])
 
-  @@id([courseId, classId])
-  @@index([courseId])
-  @@index([classId])
-}
-*/
+//   @@id([courseId, classId])
+//   @@index([courseId])
+//   @@index([classId])
+// }
+
 
 
 enum Level {
