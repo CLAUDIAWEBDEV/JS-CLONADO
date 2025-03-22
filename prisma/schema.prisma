@@ -1,0 +1,60 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+//ESCRIBIRE LA TABLA Y ESQUEMA QUE TENGAN LOS DATOS
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+//Agregamos Course
+model Course {
+  id            Int             @id @default(autoincrement())
+  //titulo debe ser unico añado unique
+  title         String          @unique @db.VarChar(255)
+  description   String          @db.VarChar(255)
+  level         Level
+  classes       Class[]
+
+  @@index([id])
+}
+
+//cuando se que cuantos son los niveles creo una lista de valores
+// PRIMERO; en powershell npx prisma db push
+// SEGUNDO; en el powershell npx prisma generate client
+
+model Class {
+  id            Int             @id @default(autoincrement())
+  name          String          @unique @db.VarChar(255)
+  vimeoId       Int             @unique
+  courses       Course[]
+}
+
+
+/* RELACION EXPLICITA
+model ClassInCourse {
+  courseId Int
+  course   Course @relation(fields: [courseId], references: [id])
+  classId  Int
+  class    Class  @relation(fields: [classId], references: [id])
+
+  @@id([courseId, classId])
+  @@index([courseId])
+  @@index([classId])
+}
+*/
+
+
+enum Level {
+  beginner
+  intermediate
+  advanced
+}

@@ -1,0 +1,7 @@
+<div class="mx-auto mt-6 grid max-w-3xl gap-4" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+    @each(course in courses)
+    @!component('components/course-card', {
+        course,
+    })
+    @endeach
+  </div>    

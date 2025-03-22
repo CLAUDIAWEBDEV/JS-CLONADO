@@ -1,0 +1,24 @@
+@layout('layouts/main')
+@set('title', 'Create Class')
+@section('body')
+<div class="flex min-h-screen w-full flex-col justify-center bg-gray-200">
+    <h2 class="mb-4 text-center text-2xl font-bold">Create a Class</h2>
+    @if(errors)
+    <p class="text-center text-red-600">{{errors}}</p>
+    @endif
+    <form method="POST" class="mx-auto w-full max-w-lg rounded bg-white px-6 py-12">
+      <label class="block font-bold" for="name ">Class Name</label>
+      <input minlength="4" maxlength="170" required name="name" id="name" class="mt-2 w-full rounded border-2 border-zinc-300 px-2 py-2" type="text" />
+      
+      <label class="mt-6 block font-bold" for="level">Course</label>
+      <select required name="course" class="mt-2 w-full border-2 px-2 border-zinc-300 py-3" id="course">
+        @each(course in courses)
+          <option value="{{course.id}}">{{course.title}}</option>
+        @endeach
+      </select>
+      <label class="block font-bold mt-4" for="vimeoid ">Vimeo ID</label>
+      <input type="number" minlength="4" maxlength="170" required name="vimeoid" id="vimeoid" class="mt-2 w-full rounded border-2 border-zinc-300 px-2 py-2" type="text" />
+      <input class="mt-8 w-full cursor-pointer rounded bg-indigo-800 py-2 text-white" type="submit" value="Create" />
+    </form>
+  </div>
+@endsection
