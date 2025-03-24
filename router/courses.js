@@ -19,18 +19,18 @@ router
 
 
 router.get("/course/:id", async (req, res) => {
-   /* console.log({
-        currentRoute: req.params.id,
-    });*/
+    console.log({
+        currentRoute: parseInt(req.params.id)
+    });
     const foundCourse = await req.client.course.findUnique({
         where: {
             id: parseInt(req.params.id),
         },
-        include: {
+        include: {  
             classes: {},
         },
     });
-    //console.log(foundCourse);
+    console.log("=>", foundCourse);
     res.render("courses/show", {
         course: foundCourse
     }); 
