@@ -45,11 +45,10 @@ model Class {
 //   course   Course @relation(fields: [courseId], references: [id])
 //   classId  Int
 //   class    Class  @relation(fields: [classId], references: [id])
-
 //   @@id([courseId, classId])
 //   @@index([courseId])
 //   @@index([classId])
-// }
+
 
 
 
