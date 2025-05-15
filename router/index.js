@@ -27,9 +27,16 @@ router.get("/", async (req, res) => {
      res.render("index", {
          courses: coursesWhitColor,
          pathName: "home",
+         user: req.user,
      });
  });
  
+ router.get("/protected", (req, res) => {
+    if(!req.isAuthenticated()){
+        return res.redirect("/");
+    }
+    res.render("protected");
+ });
 
  module.exports = {
     mainRouter: router,

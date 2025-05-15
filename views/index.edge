@@ -2,6 +2,7 @@
 @set('title', 'Courses')
 @section('body')
   <h1 class="py-6 text-center text-2xl font-bold uppercase">Mis cursos</h1>
+  <h2 class="text-center text-xl">{{user.email}}</h2>
   @!component('components/course-search')
 @!component('components/course-grid', {
   courses,

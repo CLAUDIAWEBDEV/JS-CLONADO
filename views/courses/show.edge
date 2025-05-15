@@ -13,10 +13,12 @@
         
        @each((courseClass, index) in course.classes)
        <div class="flex gap-3  px-3 py-5 {{courseClass.id === currentClass?.id || !currentClass && index == 0 ? 'bg-indigo-500 text-white' : 'text-black'}}">
-        <span>{{index +1}}</span>
+        <a class="flex gap-2" href="/course/{{course.id}}/{{courseClass.id}}">
+          <span>{{index +1}}</span>
           <div>
             <p>{{courseClass.name}}</p>
-          </div>  
+          </div> 
+        </a>
         </div>
        @endeach
     </div>  

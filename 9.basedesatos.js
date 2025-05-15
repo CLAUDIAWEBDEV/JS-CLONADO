@@ -3,17 +3,21 @@ const express = require("express");
 const path = require("path");
 const { PrismaClient } = require("prisma/prisma-client");
 //enviar datos al index
-const bodyParser = require("body-parser")
+const bodyParser = require("body-parser");
 const engine = require('express-edge');
-const flash = require ("connect-flash")
-const {logger} = require ("./middlewares/logger")
-const {prismaClient} = require ("./middlewares/prisma-client")
-const {initSession} = require ("./middlewares/init-session")
+const flash = require ("connect-flash");
+const {logger} = require ("./middlewares/logger");
+const {prismaClient} = require ("./middlewares/prisma-client");
+const {initSession} = require ("./middlewares/init-session");
+const session = require("express-session");
+const passport = require("passport");
+const {localStrategy} = require("./passport/strategies/login");
+const {PrismaSessionStore} = require("@quixo3/prisma-session-store");
 //IMPORT ROUTERS
 const {coursesRouter} = require ("./router/courses");
-const {mainRouter} = require ("./router/index")
-const {classesRouter} = require ("./router/classes")
-
+const {mainRouter} = require ("./router/index");
+const {classesRouter} = require ("./router/classes");
+const {authRouter} = require("./router/auth");
 //CREATE APP
 const app = express();
 
@@ -30,6 +34,21 @@ app.set("views", path.join(__dirname, "views"));
 //enviar datos a edge, true paso los dastos commo objetos
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(engine);
+
+const sessionStore = new PrismaSessionStore(client, {
+    checkPeriod: 2 * 60 * 1000,
+    dbRecordIdIsSessionId: true,
+});
+
+app.use(session({
+    secret: "mysecretkey",
+    saveUninitialized: false,
+    resave: false,
+    store: sessionStore,
+}));
+app.use (passport.initialize());
+app.use(passport.session());
+passport.use(localStrategy);
 app.use(express.static("public"));
 app.use(logger);
 
@@ -59,17 +78,33 @@ app.use (initSession());
 
 //configurar flash mediante middleware
 app.use(flash());
+passport.serializeUser((user, done) => {
+    done(null, user.id);
+});
+passport.deserializeUser(async(id, done) => {
+    try {
+        const user = await client.user.findUnique({ where: { id }});
+        done (null, user);
+    } catch (error) {
+        done(error);
+    }
+});
 
+app.use((req, res, next) => {
+    //para que no se muestre el password en la consola
+    if (req.user.password) {
+        req.user.password = null;
+    };
+    console.log("Usuario en la sesion:");
+    console.log(req.user);
+    next();
+});
 //ROUTES -------------------------------------------------------------------------
 //router
 app.use(coursesRouter);
 app.use(mainRouter);
 app.use(classesRouter);
-
-
-
-
-
+app.use(authRouter);
 
 app.listen(port, () => {
     console.log(`App running on port ${port}`);

@@ -17,12 +17,12 @@ datasource db {
 
 //Agregamos Course
 model Course {
-  id            Int             @id @default(autoincrement())
+  id          Int     @id @default(autoincrement())
   //titulo debe ser unico añado unique
-  title         String          @unique @db.VarChar(255)
-  description   String          @db.VarChar(255)
-  level         Level
-  classes       Class[]
+  title       String  @unique @db.VarChar(255)
+  description String  @db.VarChar(255)
+  level       Level
+  classes     Class[]
 
   @@index([id])
 }
@@ -32,12 +32,19 @@ model Course {
 // SEGUNDO; en el powershell npx prisma generate client
 
 model Class {
-  id            Int             @id @default(autoincrement())
-  name          String          @unique @db.VarChar(255)
-  vimeoId       Int             @unique
-  courses       Course[]
+  id      Int      @id @default(autoincrement())
+  name    String   @unique @db.VarChar(255)
+  vimeoId Int      @unique
+  courses Course[]
 }
 
+// Limitar a los usuarios
+model User {
+  id       Int    @id @default(autoincrement())
+  username String @db.VarChar(40)
+  email    String @unique @db.VarChar(255)
+  password String 
+}
 
 //  RELACION EXPLICITA
 // model ClassInCourse {
@@ -50,6 +57,14 @@ model Class {
 //   @@index([classId])
 
 
+
+//para que se mantenga la sesion almacenada en la base de datos por mas que recarge la pagina principal
+model Session {
+  id        String   @id
+  sid       String   @unique
+  data      String   @db.MediumText  // MediumText may be needed for MySql
+  expiresAt   DateTime
+}
 
 
 enum Level {
